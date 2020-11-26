@@ -1,0 +1,6 @@
+# Directories
+tmp/
+
+# Files
+.env
+run.sh
