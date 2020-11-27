@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/helmet/v2"
 	"github.com/joho/godotenv"
 
+	"deepseen-backend/apis/auth"
 	"deepseen-backend/configuration"
 	"deepseen-backend/database"
 	"deepseen-backend/utilities"
@@ -47,8 +48,8 @@ func main() {
 	}))
 	app.Use(helmet.New())
 	app.Use(limiter.New(limiter.Config{
-		Max:      60,
-		Duration: 60 * time.Second,
+		Max:        60,
+		Expiration: 60 * time.Second,
 		LimitReached: func(ctx *fiber.Ctx) error {
 			return utilities.Response(utilities.ResponseParams{
 				Ctx:    ctx,
@@ -59,7 +60,8 @@ func main() {
 	}))
 	app.Use(logger.New())
 
-	// TODO: available APIs
+	// available APIs
+	auth.Setup(app)
 
 	// handle 404
 	app.Use(func(ctx *fiber.Ctx) error {
