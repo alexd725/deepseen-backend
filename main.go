@@ -59,10 +59,7 @@ func main() {
 	}))
 	app.Use(logger.New())
 
-	// available APIs
-	account.Setup(app)
-	auth.Setup(app)
-	index.Setup(app)
+	// TODO: available APIs
 
 	// handle 404
 	app.Use(func(ctx *fiber.Ctx) error {
@@ -76,7 +73,7 @@ func main() {
 	// get the port
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9119"
+		port = "1337"
 	}
 
 	// launch the app
