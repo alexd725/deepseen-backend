@@ -15,9 +15,9 @@ var Collections CollectionsStruct
 
 // Create database connection
 func Connect() error {
-	DatabaseConnection := os.Getenv("DATABASE_CONNECTION_STRING")
-	DatabaseName := os.Getenv("DATABASE_NAME")
-	client, clientError := mongo.NewClient(options.Client().ApplyURI(DatabaseConnection))
+	databaseConnection := os.Getenv("DATABASE_CONNECTION_STRING")
+	databaseName := os.Getenv("DATABASE_NAME")
+	client, clientError := mongo.NewClient(options.Client().ApplyURI(databaseConnection))
 	if clientError != nil {
 		return clientError
 	}
@@ -26,7 +26,7 @@ func Connect() error {
 	defer cancel()
 
 	connectionError := client.Connect(ctx)
-	db := client.Database(DatabaseName)
+	db := client.Database(databaseName)
 
 	if connectionError != nil {
 		return connectionError

@@ -17,6 +17,7 @@ import (
 	"deepseen-backend/apis/auth"
 	"deepseen-backend/configuration"
 	"deepseen-backend/database"
+	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
 
@@ -32,9 +33,16 @@ func main() {
 	}
 
 	// connect to the database
-	dbError := database.Connect()
-	if dbError != nil {
-		log.Fatal(dbError)
+	databaseError := database.Connect()
+	if databaseError != nil {
+		log.Fatal(databaseError)
+		return
+	}
+
+	// connect to the Redis server
+	redisError := redis.Connect()
+	if redisError != nil {
+		log.Fatal(redisError)
 		return
 	}
 

@@ -39,7 +39,8 @@ func Authorize(ctx *fiber.Ctx) error {
 		})
 	}
 
-	// store User ID in Locals so that it can be accessed later and proceed
+	// store token data in Locals
+	ctx.Locals("Client", claims.Client)
 	ctx.Locals("UserId", claims.UserId)
 	return ctx.Next()
 }
