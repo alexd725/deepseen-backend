@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"os"
 	"strconv"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"deepseen-backend/configuration"
 	. "deepseen-backend/database"
 	. "deepseen-backend/database/schemas"
+	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
 
@@ -123,6 +125,24 @@ func signIn(ctx *fiber.Ctx) error {
 		UserId:    userRecord.ID,
 	})
 	if tokenError != nil {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InternalServerError,
+			Status: fiber.StatusInternalServerError,
+		})
+	}
+
+	// store user image in Redis
+	redisError := redis.Client.Set(
+		context.Background(),
+		utilities.KeyFormatter(
+			configuration.Redis.Prefixes.User,
+			userRecord.ID,
+		),
+		imageRecord.Image,
+		configuration.Redis.TTL,
+	).Err()
+	if redisError != nil {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.InternalServerError,

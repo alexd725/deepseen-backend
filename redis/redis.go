@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var Client RedisClient
+var Client *redis.Client
 var ctx = context.Background()
 
 // Connect to the Redis server
@@ -17,18 +17,17 @@ func Connect() error {
 	redisPort := os.Getenv("REDIS_PORT")
 
 	// create a client instance
-	client := redis.NewClient(&redis.Options{
+	Client = redis.NewClient(&redis.Options{
 		Addr:     redisHost + ":" + redisPort,
 		Password: redisPassword,
 		DB:       0,
 	})
 
 	// ping the server
-	_, pingError := client.Ping(ctx).Result()
+	_, pingError := Client.Ping(ctx).Result()
 	if pingError != nil {
 		return pingError
 	}
 
-	Client = client
 	return nil
 }
