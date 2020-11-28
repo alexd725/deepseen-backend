@@ -16,7 +16,7 @@ import (
 
 // Handle signing up
 func signUp(ctx *fiber.Ctx) error {
-	// check data TODO: there should be a client type specification for both Sign In and Sign Up
+	// check data
 	var body SignUpUserRequest
 	bodyParsingError := ctx.BodyParser(&body)
 	if bodyParsingError != nil {
@@ -26,23 +26,36 @@ func signUp(ctx *fiber.Ctx) error {
 			Status: fiber.StatusInternalServerError,
 		})
 	}
+	client := body.Client
 	email := body.Email
 	name := body.Name
 	password := body.Password
-	if email == "" || name == "" || password == "" {
+	if client == "" || email == "" || name == "" || password == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
 			Status: fiber.StatusBadRequest,
 		})
 	}
+	trimmedClient := strings.TrimSpace(client)
 	trimmedEmail := strings.TrimSpace(email)
 	trimmedName := strings.TrimSpace(name)
 	trimmedPassword := strings.TrimSpace(password)
-	if trimmedEmail == "" || trimmedName == "" || trimmedPassword == "" {
+	if trimmedClient == "" || trimmedEmail == "" ||
+		trimmedName == "" || trimmedPassword == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
+			Status: fiber.StatusBadRequest,
+		})
+	}
+
+	// make sure that the client is valid
+	clients := utilities.Values(configuration.Clients)
+	if !utilities.IncludesString(clients, trimmedClient) {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InvalidData,
 			Status: fiber.StatusBadRequest,
 		})
 	}
@@ -70,7 +83,6 @@ func signUp(ctx *fiber.Ctx) error {
 	NewUser := new(User)
 	NewUser.ID = ""
 	NewUser.Email = trimmedEmail
-	NewUser.Image = ""
 	NewUser.Name = trimmedName
 	NewUser.Role = "user"
 	NewUser.Created = now
@@ -150,12 +162,14 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// generate a token
-	expiration, expirationError := strconv.Atoi(os.Getenv("TOKENS_ACCESS_EXPIRATION"))
+	expiration, expirationError := strconv.Atoi(os.Getenv("TOKEN_EXPIRATION"))
 	if expirationError != nil {
-		expiration = 24
+		expiration = 9999
 	}
 	token, tokenError := utilities.GenerateJWT(utilities.GenerateJWTParams{
+		Client:    trimmedClient,
 		ExpiresIn: int64(expiration),
+		Image:     image,
 		UserId:    createdUser.ID,
 	})
 	if tokenError != nil {

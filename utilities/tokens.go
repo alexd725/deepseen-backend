@@ -12,7 +12,7 @@ import (
 
 // Get JWT secret from the environment
 func getSecret() string {
-	secret := os.Getenv("TOKENS_ACCESS_SECRET")
+	secret := os.Getenv("TOKEN_SECRET")
 	if secret == "" {
 		secret = "super-secret"
 	}
@@ -23,11 +23,13 @@ func getSecret() string {
 func GenerateJWT(params GenerateJWTParams) (string, error) {
 	expiration := params.ExpiresIn * 60 * 60
 	if expiration == 0 {
-		expiration = 24 * 60 * 60
+		expiration = 9999 * 60 * 60
 	}
 
 	// create claims
 	claims := JWTClaims{
+		params.Client,
+		params.Image,
 		params.UserId,
 		JWT.StandardClaims{
 			ExpiresAt: time.Now().Unix() + expiration,

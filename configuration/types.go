@@ -13,7 +13,8 @@ type ResponseMessagesStruct struct {
 	TooManyRequests     string
 }
 
-type RolesStruct struct {
-	Admin string
-	User  string
+type ClientsStruct struct {
+	Desktop string
+	Mobile  string
+	Web     string
 }

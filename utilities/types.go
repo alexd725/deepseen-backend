@@ -6,11 +6,15 @@ import (
 )
 
 type GenerateJWTParams struct {
+	Client    string
 	ExpiresIn int64
+	Image     string
 	UserId    string
 }
 
 type JWTClaims struct {
+	Client string `json:"client"`
+	Image  string `json:"image"`
 	UserId string `json:"userId"`
 	JWT.StandardClaims
 }

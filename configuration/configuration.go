@@ -14,8 +14,9 @@ var ResponseMessages = ResponseMessagesStruct{
 	TooManyRequests:     "TOO_MANY_REQUESTS",
 }
 
-// Available user roles
-var Roles = RolesStruct{
-	Admin: "admin",
-	User:  "user",
+// Available clients
+var Clients = ClientsStruct{
+	Desktop: "desktop",
+	Mobile:  "mobile",
+	Web:     "web",
 }

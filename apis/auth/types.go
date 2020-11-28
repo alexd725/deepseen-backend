@@ -1,6 +1,7 @@
 package auth
 
 type SignInUserRequest struct {
+	Client   string `json:"client"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
