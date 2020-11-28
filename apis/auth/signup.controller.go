@@ -61,7 +61,7 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// load User schema
-	UserCollection := Instance.Database.Collection("User")
+	UserCollection := Instance.Database.Collection(Collections.User)
 
 	// check if email is already in use
 	existingRecord := UserCollection.FindOne(
@@ -103,7 +103,7 @@ func signUp(ctx *fiber.Ctx) error {
 	createdRecord.Decode(createdUser)
 
 	// load Image schema
-	ImageCollection := Instance.Database.Collection("Image")
+	ImageCollection := Instance.Database.Collection(Collections.Image)
 
 	// create an Image for the User
 	image, imageError := utilities.MakeHash(createdUser.ID)
@@ -132,7 +132,7 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// load Password schema
-	PasswordCollection := Instance.Database.Collection("Password")
+	PasswordCollection := Instance.Database.Collection(Collections.Password)
 
 	// create password hash
 	hash, hashError := utilities.MakeHash(trimmedPassword)

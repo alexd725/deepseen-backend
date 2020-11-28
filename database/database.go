@@ -11,6 +11,8 @@ import (
 
 var Instance MongoInstance
 
+var Collections CollectionsStruct
+
 // Create database connection
 func Connect() error {
 	DatabaseConnection := os.Getenv("DATABASE_CONNECTION_STRING")
@@ -33,6 +35,13 @@ func Connect() error {
 	Instance = MongoInstance{
 		Client:   client,
 		Database: db,
+	}
+
+	Collections = CollectionsStruct{
+		Image:    "Image",
+		Password: "Password",
+		Track:    "Track",
+		User:     "User",
 	}
 
 	return nil

@@ -9,5 +9,5 @@ func Setup(app *fiber.App) {
 	group := app.Group("/api/auth")
 
 	group.Post("/signup", signUp)
-	// group.Post("/signin", signIn)
+	group.Post("/signin", signIn)
 }
