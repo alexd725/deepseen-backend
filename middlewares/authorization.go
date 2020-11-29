@@ -39,6 +39,9 @@ func Authorize(ctx *fiber.Ctx) error {
 		})
 	}
 
+	// TODO: check Redis
+	// TODO: check the database
+
 	// store token data in Locals
 	ctx.Locals("Client", claims.Client)
 	ctx.Locals("UserId", claims.UserId)

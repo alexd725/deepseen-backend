@@ -56,7 +56,7 @@ func main() {
 	}))
 	app.Use(helmet.New())
 	app.Use(limiter.New(limiter.Config{
-		Max:        60,
+		Max:        120,
 		Expiration: 60 * time.Second,
 		LimitReached: func(ctx *fiber.Ctx) error {
 			return utilities.Response(utilities.ResponseParams{

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -108,7 +109,9 @@ func signUp(ctx *fiber.Ctx) error {
 	ImageCollection := Instance.Database.Collection(Collections.Image)
 
 	// create an Image for the User
-	image, imageError := utilities.MakeHash(createdUser.ID)
+	image, imageError := utilities.MakeHash(
+		createdUser.ID + fmt.Sprintf("%v", utilities.MakeTimestamp()),
+	)
 	if imageError != nil {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
