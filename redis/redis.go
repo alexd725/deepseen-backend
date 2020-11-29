@@ -9,6 +9,7 @@ import (
 
 var Client *redis.Client
 var ctx = context.Background()
+var Nil = redis.Nil
 
 // Connect to the Redis server
 func Connect() error {

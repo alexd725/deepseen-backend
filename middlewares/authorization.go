@@ -1,11 +1,16 @@
 package middlewares
 
 import (
+	"context"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
 
 	"deepseen-backend/configuration"
+	. "deepseen-backend/database"
+	. "deepseen-backend/database/schemas"
+	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
 
@@ -39,8 +44,78 @@ func Authorize(ctx *fiber.Ctx) error {
 		})
 	}
 
-	// TODO: check Redis
-	// TODO: check the database
+	// check Redis
+	redisImage, redisError := redis.Client.Get(
+		context.Background(),
+		utilities.KeyFormatter(
+			configuration.Redis.Prefixes.User,
+			claims.UserId,
+		),
+	).Result()
+	if redisError != nil {
+		// the key was not found
+		if redisError == redis.Nil {
+			// load an Image record
+			ImageCollection := Instance.Database.Collection(Collections.Image)
+			rawImageRecord := ImageCollection.FindOne(
+				ctx.Context(),
+				bson.D{{Key: "userId", Value: claims.UserId}},
+			)
+			imageRecord := &Image{}
+			rawImageRecord.Decode(imageRecord)
+			if imageRecord.ID == "" {
+				return utilities.Response(utilities.ResponseParams{
+					Ctx:    ctx,
+					Info:   configuration.ResponseMessages.AccessDenied,
+					Status: fiber.StatusUnauthorized,
+				})
+			}
+
+			// compare images
+			if claims.Image != imageRecord.Image {
+				return utilities.Response(utilities.ResponseParams{
+					Ctx:    ctx,
+					Info:   configuration.ResponseMessages.AccessDenied,
+					Status: fiber.StatusUnauthorized,
+				})
+			}
+
+			// if image is valid, store it in Redis
+			redisUserError := redis.Client.Set(
+				context.Background(),
+				utilities.KeyFormatter(
+					configuration.Redis.Prefixes.User,
+					claims.UserId,
+				),
+				imageRecord.Image,
+				configuration.Redis.TTL,
+			).Err()
+			if redisUserError != nil {
+				return utilities.Response(utilities.ResponseParams{
+					Ctx:    ctx,
+					Info:   configuration.ResponseMessages.InternalServerError,
+					Status: fiber.StatusInternalServerError,
+				})
+			}
+
+			// store token data in Locals
+			ctx.Locals("Client", claims.Client)
+			ctx.Locals("UserId", claims.UserId)
+			return ctx.Next()
+		}
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InternalServerError,
+			Status: fiber.StatusInternalServerError,
+		})
+	}
+	if redisImage != claims.Image {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.AccessDenied,
+			Status: fiber.StatusUnauthorized,
+		})
+	}
 
 	// store token data in Locals
 	ctx.Locals("Client", claims.Client)

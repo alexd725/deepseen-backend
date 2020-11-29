@@ -90,15 +90,13 @@ func completeSignOut(ctx *fiber.Ctx) error {
 		})
 	}
 
-	// store updated user image in Redis
-	redisUserError := redis.Client.Set(
+	// delete image record from Redis
+	redisUserError := redis.Client.Del(
 		context.Background(),
 		utilities.KeyFormatter(
 			configuration.Redis.Prefixes.User,
 			userId,
 		),
-		image,
-		configuration.Redis.TTL,
 	).Err()
 	if redisUserError != nil {
 		return utilities.Response(utilities.ResponseParams{
