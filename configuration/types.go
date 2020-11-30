@@ -27,7 +27,9 @@ type ResponseMessagesStruct struct {
 	InvalidData         string
 	InvalidToken        string
 	MissingData         string
+	MissingSecret       string
 	MissingToken        string
+	MissingUserID       string
 	NotFound            string
 	Ok                  string
 	TooManyRequests     string

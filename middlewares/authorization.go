@@ -14,7 +14,7 @@ import (
 	"deepseen-backend/utilities"
 )
 
-// Authorize requests
+// Authorize requests for the general APIs
 func Authorize(ctx *fiber.Ctx) error {
 	// get authorization header
 	rawToken := ctx.Get("Authorization")
