@@ -16,6 +16,7 @@ import (
 
 	"deepseen-backend/apis/auth"
 	"deepseen-backend/apis/services"
+	"deepseen-backend/apis/user"
 	"deepseen-backend/configuration"
 	"deepseen-backend/database"
 	"deepseen-backend/redis"
@@ -72,6 +73,7 @@ func main() {
 	// available APIs
 	auth.Setup(app)
 	services.Setup(app)
+	user.Setup(app)
 
 	// handle 404
 	app.Use(func(ctx *fiber.Ctx) error {

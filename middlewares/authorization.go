@@ -71,16 +71,7 @@ func Authorize(ctx *fiber.Ctx) error {
 				})
 			}
 
-			// compare images
-			if claims.Image != imageRecord.Image {
-				return utilities.Response(utilities.ResponseParams{
-					Ctx:    ctx,
-					Info:   configuration.ResponseMessages.AccessDenied,
-					Status: fiber.StatusUnauthorized,
-				})
-			}
-
-			// if image is valid, store it in Redis
+			// store image in Redis regardless of its validity
 			redisUserError := redis.Client.Set(
 				context.Background(),
 				utilities.KeyFormatter(
@@ -95,6 +86,15 @@ func Authorize(ctx *fiber.Ctx) error {
 					Ctx:    ctx,
 					Info:   configuration.ResponseMessages.InternalServerError,
 					Status: fiber.StatusInternalServerError,
+				})
+			}
+
+			// compare images
+			if claims.Image != imageRecord.Image {
+				return utilities.Response(utilities.ResponseParams{
+					Ctx:    ctx,
+					Info:   configuration.ResponseMessages.AccessDenied,
+					Status: fiber.StatusUnauthorized,
 				})
 			}
 
