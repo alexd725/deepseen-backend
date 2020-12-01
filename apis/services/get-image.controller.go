@@ -11,8 +11,8 @@ import (
 	"deepseen-backend/utilities"
 )
 
-// Get user account for the Websockets server
-func getUser(ctx *fiber.Ctx) error {
+// Get image record by User ID for the Websockets server
+func getImage(ctx *fiber.Ctx) error {
 	// check data
 	id := ctx.Params("id")
 	if id == "" {
@@ -49,10 +49,26 @@ func getUser(ctx *fiber.Ctx) error {
 		})
 	}
 
+	// get Image record
+	ImageCollection := Instance.Database.Collection(Collections.Image)
+	rawImageRecord := ImageCollection.FindOne(
+		ctx.Context(),
+		bson.D{{Key: "userId", Value: id}},
+	)
+	imageRecord := &Image{}
+	rawImageRecord.Decode(imageRecord)
+	if imageRecord.ID == "" {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.NotFound,
+			Status: fiber.StatusNotFound,
+		})
+	}
+
 	return utilities.Response(utilities.ResponseParams{
 		Ctx: ctx,
 		Data: fiber.Map{
-			"user": userRecord,
+			"image": imageRecord,
 		},
 	})
 }

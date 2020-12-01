@@ -10,5 +10,5 @@ import (
 func Setup(app *fiber.App) {
 	group := app.Group("/api/services")
 
-	group.Get("/user/:id", middlewares.AuthorizeServices, getUser)
+	group.Get("/image/:id", middlewares.AuthorizeServices, getImage)
 }
