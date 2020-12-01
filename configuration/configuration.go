@@ -15,7 +15,7 @@ var Redis = RedisOptions{
 		Room: "room",
 		User: "user",
 	},
-	TTL: 8 * time.Hour,
+	TTL: 24 * time.Hour,
 }
 
 // Server response messages
@@ -26,7 +26,7 @@ var ResponseMessages = ResponseMessagesStruct{
 	InvalidData:         "INVALID_DATA",
 	InvalidToken:        "INVALID_TOKEN",
 	MissingData:         "MISSING_DATA",
-	MissingSecret:        "MISSING_SECRET",
+	MissingSecret:       "MISSING_SECRET",
 	MissingToken:        "MISSING_TOKEN",
 	MissingUserID:       "MISSING_USER_ID",
 	NotFound:            "NOT_FOUND",

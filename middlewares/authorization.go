@@ -45,13 +45,12 @@ func Authorize(ctx *fiber.Ctx) error {
 	}
 
 	// check Redis
-	redisImage, redisError := redis.Client.Get(
-		context.Background(),
-		utilities.KeyFormatter(
-			configuration.Redis.Prefixes.User,
-			claims.UserId,
-		),
-	).Result()
+	key := utilities.KeyFormatter(
+		configuration.Redis.Prefixes.User,
+		claims.UserId,
+	)
+	redisContext := context.Background()
+	redisImage, redisError := redis.Client.Get(redisContext, key).Result()
 	if redisError != nil {
 		// the key was not found
 		if redisError == redis.Nil {
@@ -73,11 +72,8 @@ func Authorize(ctx *fiber.Ctx) error {
 
 			// store image in Redis regardless of its validity
 			redisUserError := redis.Client.Set(
-				context.Background(),
-				utilities.KeyFormatter(
-					configuration.Redis.Prefixes.User,
-					claims.UserId,
-				),
+				redisContext,
+				key,
 				imageRecord.Image,
 				configuration.Redis.TTL,
 			).Err()
@@ -114,6 +110,16 @@ func Authorize(ctx *fiber.Ctx) error {
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.AccessDenied,
 			Status: fiber.StatusUnauthorized,
+		})
+	}
+
+	// update EXPIRE for the record in Redis
+	expireError := redis.Client.Expire(redisContext, key, configuration.Redis.TTL).Err()
+	if expireError != nil {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InternalServerError,
+			Status: fiber.StatusInternalServerError,
 		})
 	}
 
