@@ -10,6 +10,7 @@ import (
 func Setup(app *fiber.App) {
 	group := app.Group("/api/user")
 
+	group.Get("/", middlewares.Authorize, getUser)
 	group.Patch("/name", middlewares.Authorize, changeName)
 	group.Patch("/password", middlewares.Authorize, changePassword)
 }
