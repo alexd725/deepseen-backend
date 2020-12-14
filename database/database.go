@@ -40,7 +40,6 @@ func Connect() error {
 	Collections = CollectionsStruct{
 		Image:    "Image",
 		Password: "Password",
-		Track:    "Track",
 		User:     "User",
 	}
 
