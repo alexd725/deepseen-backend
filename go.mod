@@ -9,6 +9,8 @@ require (
 	github.com/gofiber/fiber/v2 v2.2.0
 	github.com/gofiber/helmet/v2 v2.0.1
 	github.com/joho/godotenv v1.3.0
+	github.com/sendgrid/rest v2.6.2+incompatible // indirect
+	github.com/sendgrid/sendgrid-go v3.7.2+incompatible
 	go.mongodb.org/mongo-driver v1.4.3
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )
