@@ -31,9 +31,10 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 	client := body.Client
 	email := body.Email
-	name := body.Name
+	firstName := body.FirstName
+	lastName := body.LastName
 	password := body.Password
-	if client == "" || email == "" || name == "" || password == "" {
+	if client == "" || email == "" || firstName == "" || lastName == "" || password == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
@@ -42,10 +43,11 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 	trimmedClient := strings.TrimSpace(client)
 	trimmedEmail := strings.TrimSpace(email)
-	trimmedName := strings.TrimSpace(name)
+	trimmedFirstName := strings.TrimSpace(firstName)
+	trimmedLastName := strings.TrimSpace(lastName)
 	trimmedPassword := strings.TrimSpace(password)
-	if trimmedClient == "" || trimmedEmail == "" ||
-		trimmedName == "" || trimmedPassword == "" {
+	if trimmedClient == "" || trimmedEmail == "" || trimmedFirstName == "" ||
+		trimmedLastName == "" || trimmedPassword == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
@@ -86,7 +88,8 @@ func signUp(ctx *fiber.Ctx) error {
 	NewUser := new(User)
 	NewUser.ID = ""
 	NewUser.Email = trimmedEmail
-	NewUser.Name = trimmedName
+	NewUser.FirstName = trimmedFirstName
+	NewUser.LastName = trimmedLastName
 	NewUser.Role = "user"
 	NewUser.Created = now
 	NewUser.Updated = now

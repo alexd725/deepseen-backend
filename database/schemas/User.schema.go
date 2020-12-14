@@ -4,9 +4,10 @@ package schemas
 type User struct {
 	ID string `json:"id,omitempty" bson:"_id,omitempty"`
 
-	Email string `json:"email"`
-	Name  string `json:"name"`
-	Role  string `json:"role"`
+	Email     string `json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Role      string `json:"role"`
 
 	Created int64 `json:"created"`
 	Updated int64 `json:"updated"`

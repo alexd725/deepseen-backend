@@ -7,6 +7,7 @@ type SignInUserRequest struct {
 }
 
 type SignUpUserRequest struct {
-	Name string `json:"name"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 	SignInUserRequest
 }

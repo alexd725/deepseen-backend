@@ -24,16 +24,18 @@ func changeName(ctx *fiber.Ctx) error {
 			Status: fiber.StatusInternalServerError,
 		})
 	}
-	name := body.Name
-	if name == "" {
+	firstName := body.FirstName
+	lastName := body.LastName
+	if firstName == "" || lastName == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
 			Status: fiber.StatusBadRequest,
 		})
 	}
-	trimmedName := strings.TrimSpace(name)
-	if trimmedName == "" {
+	trimmedFirstName := strings.TrimSpace(firstName)
+	trimmedLastName := strings.TrimSpace(lastName)
+	if trimmedFirstName == "" || trimmedLastName == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
@@ -64,8 +66,12 @@ func changeName(ctx *fiber.Ctx) error {
 			Key: "$set",
 			Value: bson.D{
 				{
-					Key:   "name",
-					Value: name,
+					Key:   "firstName",
+					Value: firstName,
+				},
+				{
+					Key:   "lastName",
+					Value: lastName,
 				},
 				{
 					Key:   "updated",

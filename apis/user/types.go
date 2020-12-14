@@ -1,7 +1,8 @@
 package user
 
 type ChangeNameRequest struct {
-	Name string `json:"name"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
 }
 
 type ChangePasswordRequest struct {
