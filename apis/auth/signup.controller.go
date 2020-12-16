@@ -206,6 +206,16 @@ func signUp(ctx *fiber.Ctx) error {
 		})
 	}
 
+	formattedTemplate := utilities.CreateWelcomeTemplate(
+		createdUser.FirstName,
+		createdUser.LastName,
+	)
+	utilities.SendEmail(
+		createdUser,
+		"Welcome to Deepseen!",
+		formattedTemplate,
+	)
+
 	return utilities.Response(utilities.ResponseParams{
 		Ctx: ctx,
 		Data: fiber.Map{

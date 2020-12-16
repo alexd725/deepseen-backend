@@ -25,3 +25,8 @@ type ResponseParams struct {
 	Info   string
 	Status int
 }
+
+type Template struct {
+	Html  string
+	Plain string
+}

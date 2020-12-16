@@ -6,24 +6,30 @@ import (
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
+
+	. "deepseen-backend/database/schemas"
 )
 
 // Send an email via SendGrid
-func SendEmail(destination, firstName, lastName, subject, template string) {
+func SendEmail(user *User, subject string, formattedTemplate Template) {
 	from := mail.NewEmail("Deepseen", os.Getenv("SENDGRID_FROM_ADDRESS"))
-	to := mail.NewEmail(firstName+" "+lastName, destination)
+	to := mail.NewEmail(user.FirstName+" "+user.LastName, user.Email)
 
-	plainTextContent := "This is a test"
-	htmlContent := "<strong>THIS is a test</strong>"
-	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+	message := mail.NewSingleEmail(
+		from,
+		subject,
+		to,
+		formattedTemplate.Plain,
+		formattedTemplate.Html,
+	)
 
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, emailError := client.Send(message)
 
 	// show log
 	if emailError == nil {
-		fmt.Println("-- SENDGRID: sent to", destination, "[", response.StatusCode, response.Body, "]")
+		fmt.Println("-- SENDGRID: sent to", user.Email, "[", response.StatusCode, response.Body, "]")
 	} else {
-		fmt.Println("-- SENDGRID: error", emailError, "[", destination, "]")
+		fmt.Println("-- SENDGRID: error", emailError, "[", user.Email, "]")
 	}
 }
