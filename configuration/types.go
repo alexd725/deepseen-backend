@@ -24,6 +24,7 @@ type ResponseMessagesStruct struct {
 	AccessDenied        string
 	EmailAlreadyInUse   string
 	InternalServerError string
+	InvalidCode         string
 	InvalidData         string
 	InvalidToken        string
 	MissingData         string

@@ -23,6 +23,7 @@ var ResponseMessages = ResponseMessagesStruct{
 	AccessDenied:        "ACCESS_DENIED",
 	EmailAlreadyInUse:   "EMAIL_ALREADY_IN_USE",
 	InternalServerError: "INTERNAL_SERVER_ERROR",
+	InvalidCode:         "INVALID_CODE",
 	InvalidData:         "INVALID_DATA",
 	InvalidToken:        "INVALID_TOKEN",
 	MissingData:         "MISSING_DATA",

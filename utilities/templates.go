@@ -6,14 +6,14 @@ import (
 
 // Create a "Recovery" template
 func CreateRecoveryTemplate(code, firstName, lastName string) Template {
-	link := os.Getenv("BACKEND_URI") + "/api/auth/" + code
+	link := os.Getenv("FRONTEND_URI") + "/recovery/validate/" + code
 	return Template{
 		Html: "<h1>Password recovery</h1>" +
 			"<div>Hi, " + firstName + " " + lastName + "!</div>" +
-			"<div>Here's your password recovery link:</div>" +
+			"<div>Here's your account recovery link:</div>" +
 			"<div><a href='" + link + "'>" + link + "</a></div>",
 		Plain: "Password recovery\nHi, " + firstName + " " + lastName + "!\n" +
-			"Here's your password recovery link:\n" + link,
+			"Here's your account recovery link:\n" + link,
 	}
 }
 

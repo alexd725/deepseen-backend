@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/lucsky/cuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"deepseen-backend/configuration"
 	. "deepseen-backend/database"
@@ -67,19 +68,27 @@ func sendRecoveryEmail(ctx *fiber.Ctx) error {
 	}
 
 	// generate a recovery code with CUID
-	code := cuid.Slug()
+	recoveryCode := cuid.Slug()
 
 	// update the Password record
 	now := utilities.MakeTimestamp()
+	passwordId, conversionError := primitive.ObjectIDFromHex(passwordRecord.ID)
+	if conversionError != nil {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InternalServerError,
+			Status: fiber.StatusInternalServerError,
+		})
+	}
 	_, updateError := PasswordCollection.UpdateOne(
 		ctx.Context(),
-		bson.D{{Key: "_id", Value: passwordRecord.ID}},
+		bson.D{{Key: "_id", Value: passwordId}},
 		bson.D{{
 			Key: "$set",
 			Value: bson.D{
 				{
 					Key:   "recoveryCode",
-					Value: code,
+					Value: recoveryCode,
 				},
 				{
 					Key:   "updated",
@@ -98,11 +107,11 @@ func sendRecoveryEmail(ctx *fiber.Ctx) error {
 
 	// send an email with recovery link
 	formattedTemplate := utilities.CreateRecoveryTemplate(
-		code,
+		recoveryCode,
 		userRecord.FirstName,
 		userRecord.LastName,
 	)
-	utilities.SendEmail(userRecord, "Deepseen: password recovery", formattedTemplate)
+	utilities.SendEmail(userRecord, "Deepseen: account recovery", formattedTemplate)
 
 	return utilities.Response(utilities.ResponseParams{
 		Ctx: ctx,
