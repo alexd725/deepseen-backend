@@ -38,14 +38,36 @@ func wrapPlain(content string) string {
 
 // Create a "Recovery" template
 func CreateRecoveryTemplate(code, firstName, lastName string) Template {
+	line1 := "Account recovery"
+	line2 := fmt.Sprintf("Hi, %s %s!", firstName, lastName)
+	line3 := "Here's your account recovery link:"
 	link := os.Getenv("FRONTEND_URI") + "/recovery/validate/" + code
 	return Template{
-		Html: "<h1>Password recovery</h1>" +
-			"<div>Hi, " + firstName + " " + lastName + "!</div>" +
-			"<div>Here's your account recovery link:</div>" +
-			"<div><a href='" + link + "'>" + link + "</a></div>",
-		Plain: "Password recovery\nHi, " + firstName + " " + lastName + "!\n" +
-			"Here's your account recovery link:\n" + link,
+		Html: wrapHtml(fmt.Sprintf(`
+			<h1 style="color: turquoise; text-align: center;">
+				%s
+			</h1>
+			<div style="font-size: 18px;">
+				<div>
+					%s
+				</div>
+				<div>
+					%s
+				</div>
+				<div>
+					<a href="%s" style="color: turquoise;">
+						%s
+					</a>
+				</div>
+			</div>
+		`, line1, line2, line3, link, link)),
+		Plain: wrapPlain(fmt.Sprintf(`
+			%s
+			
+			%s
+			%s
+			%s
+		`, line1, line2, line3, link)),
 	}
 }
 
