@@ -10,6 +10,12 @@ type ClientsStruct struct {
 	Web     string
 }
 
+type EnvironmentsStruct struct {
+	Development string
+	Heroku      string
+	Production  string
+}
+
 type RedisPrefixes struct {
 	Room string
 	User string
