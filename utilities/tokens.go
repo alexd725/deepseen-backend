@@ -21,9 +21,9 @@ func getSecret() string {
 
 // Generate a new JWT token
 func GenerateJWT(params GenerateJWTParams) (string, error) {
-	expiration := params.ExpiresIn * 60 * 60
+	expiration := params.ExpiresIn * 24 * 60 * 60
 	if expiration == 0 {
-		expiration = 9999 * 60 * 60
+		expiration = 9999 * 24 * 60 * 60
 	}
 
 	// create claims

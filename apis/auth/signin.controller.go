@@ -49,6 +49,16 @@ func signIn(ctx *fiber.Ctx) error {
 		})
 	}
 
+	// make sure that the client is valid
+	clients := utilities.Values(configuration.Clients)
+	if !utilities.IncludesString(clients, trimmedClient) {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InvalidData,
+			Status: fiber.StatusBadRequest,
+		})
+	}
+
 	// load User schema
 	UserCollection := Instance.Database.Collection(Collections.User)
 

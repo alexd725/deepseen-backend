@@ -26,7 +26,7 @@ import (
 func main() {
 	// load environment variables via the .env file
 	env := os.Getenv("ENV")
-	if env != "heroku" {
+	if env != configuration.Environments.Heroku {
 		envError := godotenv.Load()
 		if envError != nil {
 			log.Fatal(envError)

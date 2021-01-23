@@ -9,6 +9,13 @@ var Clients = ClientsStruct{
 	Web:     "web",
 }
 
+// Available environments
+var Environments = EnvironmentsStruct{
+	Development: "development",
+	Heroku:      "heroku",
+	Production:  "production",
+}
+
 // Additional Reids configuration
 var Redis = RedisOptions{
 	Prefixes: RedisPrefixes{
