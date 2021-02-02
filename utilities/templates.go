@@ -41,7 +41,7 @@ func CreateRecoveryTemplate(code, firstName, lastName string) Template {
 	line1 := "Account recovery"
 	line2 := fmt.Sprintf("Hi, %s %s!", firstName, lastName)
 	line3 := "Here's your account recovery link:"
-	link := os.Getenv("FRONTEND_URI") + "/recovery/validate/" + code
+	link := os.Getenv("FRONTEND_URI") + "/validate/" + code
 	return Template{
 		Html: wrapHtml(fmt.Sprintf(`
 			<h1 style="color: turquoise; text-align: center;">
