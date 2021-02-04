@@ -3,13 +3,11 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
-	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/helmet/v2"
 	"github.com/joho/godotenv"
@@ -19,6 +17,7 @@ import (
 	"deepseen-backend/apis/user"
 	"deepseen-backend/configuration"
 	"deepseen-backend/database"
+	"deepseen-backend/middlewares"
 	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
@@ -57,16 +56,9 @@ func main() {
 		File: "./assets/favicon.ico",
 	}))
 	app.Use(helmet.New())
-	app.Use(limiter.New(limiter.Config{
-		Max:        120,
-		Expiration: 60 * time.Second,
-		LimitReached: func(ctx *fiber.Ctx) error {
-			return utilities.Response(utilities.ResponseParams{
-				Ctx:    ctx,
-				Info:   configuration.ResponseMessages.TooManyRequests,
-				Status: fiber.StatusTooManyRequests,
-			})
-		},
+	app.Use(middlewares.Limiter(middlewares.LimiterParams{
+		Max:       90,
+		Timeframe: 60,
 	}))
 	app.Use(logger.New())
 
