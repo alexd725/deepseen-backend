@@ -31,7 +31,7 @@ func Setup(app *fiber.App) {
 		"/signin",
 		middlewares.Limiter(middlewares.LimiterParams{
 			Max:       5,
-			Timeframe: 60 * 60 * 1,
+			Timeframe: 60 * 5,
 		}),
 		signIn,
 	)
@@ -40,7 +40,7 @@ func Setup(app *fiber.App) {
 		"/signup",
 		middlewares.Limiter(middlewares.LimiterParams{
 			Max:       1,
-			Timeframe: 60 * 60 * 1,
+			Timeframe: 60 * 60,
 		}),
 		signUp,
 	)
