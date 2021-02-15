@@ -42,3 +42,9 @@ type ResponseMessagesStruct struct {
 	Ok                  string
 	TooManyRequests     string
 }
+
+type RolesStruct struct {
+	Admin string
+	Root  string
+	User  string
+}

@@ -42,3 +42,10 @@ var ResponseMessages = ResponseMessagesStruct{
 	Ok:                  "OK",
 	TooManyRequests:     "TOO_MANY_REQUESTS",
 }
+
+// Available account roles
+var Roles = RolesStruct{
+	Admin: "admin",
+	Root:  "root",
+	User:  "user",
+}
