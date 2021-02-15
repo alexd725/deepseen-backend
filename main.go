@@ -14,6 +14,7 @@ import (
 
 	"deepseen-backend/apis/auth"
 	"deepseen-backend/apis/contact"
+	"deepseen-backend/apis/manage"
 	"deepseen-backend/apis/services"
 	"deepseen-backend/apis/user"
 	"deepseen-backend/configuration"
@@ -66,6 +67,7 @@ func main() {
 	// available APIs
 	auth.Setup(app)
 	contact.Setup(app)
+	manage.Setup(app)
 	services.Setup(app)
 	user.Setup(app)
 

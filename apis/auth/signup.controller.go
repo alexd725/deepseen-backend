@@ -100,7 +100,7 @@ func signUp(ctx *fiber.Ctx) error {
 	NewUser.Email = trimmedEmail
 	NewUser.FirstName = trimmedFirstName
 	NewUser.LastName = trimmedLastName
-	NewUser.Role = "user"
+	NewUser.Role = configuration.Roles.User
 	NewUser.Created = now
 	NewUser.Updated = now
 	insertionResult, insertionError := UserCollection.InsertOne(ctx.Context(), NewUser)
