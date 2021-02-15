@@ -4,6 +4,7 @@ import "go.mongodb.org/mongo-driver/mongo"
 
 type CollectionsStruct struct {
 	Image    string
+	Message  string
 	Password string
 	User     string
 }

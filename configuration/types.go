@@ -31,6 +31,7 @@ type ResponseMessagesStruct struct {
 	EmailAlreadyInUse   string
 	InternalServerError string
 	InvalidCode         string
+	InvalidEmail        string
 	InvalidData         string
 	InvalidToken        string
 	MissingData         string

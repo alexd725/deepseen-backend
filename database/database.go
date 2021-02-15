@@ -39,6 +39,7 @@ func Connect() error {
 
 	Collections = CollectionsStruct{
 		Image:    "Image",
+		Message:  "Message",
 		Password: "Password",
 		User:     "User",
 	}
