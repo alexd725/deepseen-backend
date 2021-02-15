@@ -32,6 +32,7 @@ var ResponseMessages = ResponseMessagesStruct{
 	InternalServerError: "INTERNAL_SERVER_ERROR",
 	InvalidCode:         "INVALID_CODE",
 	InvalidData:         "INVALID_DATA",
+	InvalidEmail:        "INVALID_EMAIL",
 	InvalidToken:        "INVALID_TOKEN",
 	MissingData:         "MISSING_DATA",
 	MissingSecret:       "MISSING_SECRET",

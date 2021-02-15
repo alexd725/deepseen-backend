@@ -55,6 +55,16 @@ func signUp(ctx *fiber.Ctx) error {
 		})
 	}
 
+	// make sure that email address is valid
+	emailIsValid := utilities.ValidateEmail(trimmedEmail)
+	if !emailIsValid {
+		return utilities.Response(utilities.ResponseParams{
+			Ctx:    ctx,
+			Info:   configuration.ResponseMessages.InvalidEmail,
+			Status: fiber.StatusBadRequest,
+		})
+	}
+
 	// make sure that the client is valid
 	clients := utilities.Values(configuration.Clients)
 	if !utilities.IncludesString(clients, trimmedClient) {

@@ -13,6 +13,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"deepseen-backend/apis/auth"
+	"deepseen-backend/apis/contact"
 	"deepseen-backend/apis/services"
 	"deepseen-backend/apis/user"
 	"deepseen-backend/configuration"
@@ -64,6 +65,7 @@ func main() {
 
 	// available APIs
 	auth.Setup(app)
+	contact.Setup(app)
 	services.Setup(app)
 	user.Setup(app)
 
