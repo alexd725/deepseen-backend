@@ -10,7 +10,7 @@ import (
 	"deepseen-backend/utilities"
 )
 
-// Create a Limiter middleware
+// Limiter function creates a limiter middleware
 func Limiter(params LimiterParams) fiber.Handler {
 	return limiter.New(limiter.Config{
 		Max:        params.Max,

@@ -7,11 +7,14 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// Client contains Redis client
 var Client *redis.Client
 var ctx = context.Background()
+
+// Nil contains the nil value for Redis
 var Nil = redis.Nil
 
-// Connect to the Redis server
+// Connect function creates connection to the Redis server
 func Connect() error {
 	redisHost := os.Getenv("REDIS_HOST")
 	redisPassword := os.Getenv("REDIS_PASSWORD")

@@ -8,12 +8,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/utilities"
 )
 
-// Authorize admin requests for the Manage APIs
+// AuthorizeAdmin function authorizes admin requests for the Manage APIs
 func AuthorizeAdmin(ctx *fiber.Ctx) error {
 	// get authorization header
 	rawToken := ctx.Get("Authorization")
@@ -44,12 +44,12 @@ func AuthorizeAdmin(ctx *fiber.Ctx) error {
 	}
 
 	// load an Image record
-	ImageCollection := Instance.Database.Collection(Collections.Image)
+	ImageCollection := DB.Instance.Database.Collection(DB.Collections.Image)
 	rawImageRecord := ImageCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "userId", Value: claims.UserId}},
 	)
-	imageRecord := &Image{}
+	imageRecord := &Schemas.Image{}
 	rawImageRecord.Decode(imageRecord)
 	if imageRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -69,7 +69,7 @@ func AuthorizeAdmin(ctx *fiber.Ctx) error {
 	}
 
 	// parse ID into an ObjectID
-	parsedId, parsingError := primitive.ObjectIDFromHex(claims.UserId)
+	parsedID, parsingError := primitive.ObjectIDFromHex(claims.UserId)
 	if parsingError != nil {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
@@ -79,14 +79,16 @@ func AuthorizeAdmin(ctx *fiber.Ctx) error {
 	}
 
 	// load User record
-	UserCollection := Instance.Database.Collection(Collections.User)
+	UserCollection := DB.Instance.Database.Collection(DB.Collections.User)
 	rawUserRecord := UserCollection.FindOne(
 		ctx.Context(),
-		bson.D{{Key: "_id", Value: parsedId}},
+		bson.D{{Key: "_id", Value: parsedID}},
 	)
-	userRecord := &User{}
+	userRecord := &Schemas.User{}
 	rawUserRecord.Decode(userRecord)
-	if userRecord.ID == "" || userRecord.Role != configuration.Roles.Admin {
+	if userRecord.ID == "" ||
+		!(userRecord.Role == configuration.Roles.Admin ||
+			userRecord.Role == configuration.Roles.Root) {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.AccessDenied,

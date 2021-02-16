@@ -10,7 +10,7 @@ import (
 	"deepseen-backend/utilities"
 )
 
-// Authorize requests for the Services APIs
+// AuthorizeServices function authorizes requests for the Services APIs
 func AuthorizeServices(ctx *fiber.Ctx) error {
 	// get authorization header
 	rawSecret := ctx.Get("X-WS-SECRET")

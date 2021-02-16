@@ -8,13 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
 
-// Authorize requests for the general APIs
+// Authorize function authorizes requests for the general APIs
 func Authorize(ctx *fiber.Ctx) error {
 	// get authorization header
 	rawToken := ctx.Get("Authorization")
@@ -55,12 +55,12 @@ func Authorize(ctx *fiber.Ctx) error {
 		// the key was not found
 		if redisError == redis.Nil {
 			// load an Image record
-			ImageCollection := Instance.Database.Collection(Collections.Image)
+			ImageCollection := DB.Instance.Database.Collection(DB.Collections.Image)
 			rawImageRecord := ImageCollection.FindOne(
 				ctx.Context(),
 				bson.D{{Key: "userId", Value: claims.UserId}},
 			)
-			imageRecord := &Image{}
+			imageRecord := &Schemas.Image{}
 			rawImageRecord.Decode(imageRecord)
 			if imageRecord.ID == "" {
 				return utilities.Response(utilities.ResponseParams{
