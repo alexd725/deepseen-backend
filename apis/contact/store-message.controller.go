@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/utilities"
 )
 
@@ -55,9 +55,9 @@ func storeMessage(ctx *fiber.Ctx) error {
 	}
 
 	// create a new Message record and insert it
-	MessageCollection := Instance.Database.Collection(Collections.Message)
+	MessageCollection := DB.Instance.Database.Collection(DB.Collections.Message)
 	now := utilities.MakeTimestamp()
-	NewMessage := new(Message)
+	NewMessage := new(Schemas.Message)
 	NewMessage.ID = ""
 	NewMessage.Email = trimmedEmail
 	NewMessage.Message = trimmedMessage

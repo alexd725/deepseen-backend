@@ -8,8 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/utilities"
 )
 
@@ -45,12 +45,12 @@ func validateRecoveryCode(ctx *fiber.Ctx) error {
 	}
 
 	// find Password
-	PasswordCollection := Instance.Database.Collection(Collections.Password)
+	PasswordCollection := DB.Instance.Database.Collection(DB.Collections.Password)
 	rawPasswordRecord := PasswordCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "recoveryCode", Value: trimmedCode}},
 	)
-	passwordRecord := &Password{}
+	passwordRecord := &Schemas.Password{}
 	rawPasswordRecord.Decode(passwordRecord)
 	if passwordRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -70,7 +70,7 @@ func validateRecoveryCode(ctx *fiber.Ctx) error {
 		})
 	}
 	now := utilities.MakeTimestamp()
-	passwordId, conversionError := primitive.ObjectIDFromHex(passwordRecord.ID)
+	passwordID, conversionError := primitive.ObjectIDFromHex(passwordRecord.ID)
 	if conversionError != nil {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
@@ -80,7 +80,7 @@ func validateRecoveryCode(ctx *fiber.Ctx) error {
 	}
 	_, updateError := PasswordCollection.UpdateOne(
 		ctx.Context(),
-		bson.D{{Key: "_id", Value: passwordId}},
+		bson.D{{Key: "_id", Value: passwordID}},
 		bson.D{{
 			Key: "$set",
 			Value: bson.D{

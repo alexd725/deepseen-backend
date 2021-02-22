@@ -6,7 +6,7 @@ import (
 	"deepseen-backend/middlewares"
 )
 
-// APIs setup
+// Setup function exposes available APIs
 func Setup(app *fiber.App) {
 	group := app.Group("/api/auth")
 

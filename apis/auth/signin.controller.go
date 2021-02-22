@@ -10,8 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
@@ -60,14 +60,14 @@ func signIn(ctx *fiber.Ctx) error {
 	}
 
 	// load User schema
-	UserCollection := Instance.Database.Collection(Collections.User)
+	UserCollection := DB.Instance.Database.Collection(DB.Collections.User)
 
 	// find a user
 	rawUserRecord := UserCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "email", Value: trimmedEmail}},
 	)
-	userRecord := &User{}
+	userRecord := &Schemas.User{}
 	rawUserRecord.Decode(userRecord)
 	if userRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -78,14 +78,14 @@ func signIn(ctx *fiber.Ctx) error {
 	}
 
 	// load Password schema
-	PasswordCollection := Instance.Database.Collection(Collections.Password)
+	PasswordCollection := DB.Instance.Database.Collection(DB.Collections.Password)
 
 	// find a password
 	rawPasswordRecord := PasswordCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "userId", Value: userRecord.ID}},
 	)
-	passwordRecord := &Password{}
+	passwordRecord := &Schemas.Password{}
 	rawPasswordRecord.Decode(passwordRecord)
 	if passwordRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -106,14 +106,14 @@ func signIn(ctx *fiber.Ctx) error {
 	}
 
 	// load Image schema
-	ImageCollection := Instance.Database.Collection(Collections.Image)
+	ImageCollection := DB.Instance.Database.Collection(DB.Collections.Image)
 
 	// find an image
 	rawImageRecord := ImageCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "userId", Value: userRecord.ID}},
 	)
-	imageRecord := &Image{}
+	imageRecord := &Schemas.Image{}
 	rawImageRecord.Decode(imageRecord)
 	if imageRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{

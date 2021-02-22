@@ -60,7 +60,7 @@ func changePassword(ctx *fiber.Ctx) error {
 	if passwordRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
-			Info:   configuration.ResponseMessages.AccessDenied,
+			Info:   configuration.ResponseMessages.PasswordRecordNotFound,
 			Status: fiber.StatusUnauthorized,
 		})
 	}
@@ -70,7 +70,7 @@ func changePassword(ctx *fiber.Ctx) error {
 	if !passwordIsValid {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
-			Info:   configuration.ResponseMessages.AccessDenied,
+			Info:   configuration.ResponseMessages.OldPasswordIsInvalid,
 			Status: fiber.StatusUnauthorized,
 		})
 	}
