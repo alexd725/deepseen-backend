@@ -2,21 +2,21 @@ package configuration
 
 import "time"
 
-// Available clients
+// Clients contains available clients
 var Clients = ClientsStruct{
 	Desktop: "desktop",
 	Mobile:  "mobile",
 	Web:     "web",
 }
 
-// Available environments
+// Environments contains available environments
 var Environments = EnvironmentsStruct{
 	Development: "development",
 	Heroku:      "heroku",
 	Production:  "production",
 }
 
-// Additional Reids configuration
+// Redis contains additional Reids configuration
 var Redis = RedisOptions{
 	Prefixes: RedisPrefixes{
 		Room: "room",
@@ -25,25 +25,27 @@ var Redis = RedisOptions{
 	TTL: 24 * time.Hour,
 }
 
-// Server response messages
+// ResponseMessages contains server response messages
 var ResponseMessages = ResponseMessagesStruct{
-	AccessDenied:        "ACCESS_DENIED",
-	EmailAlreadyInUse:   "EMAIL_ALREADY_IN_USE",
-	InternalServerError: "INTERNAL_SERVER_ERROR",
-	InvalidCode:         "INVALID_CODE",
-	InvalidData:         "INVALID_DATA",
-	InvalidEmail:        "INVALID_EMAIL",
-	InvalidToken:        "INVALID_TOKEN",
-	MissingData:         "MISSING_DATA",
-	MissingSecret:       "MISSING_SECRET",
-	MissingToken:        "MISSING_TOKEN",
-	MissingUserID:       "MISSING_USER_ID",
-	NotFound:            "NOT_FOUND",
-	Ok:                  "OK",
-	TooManyRequests:     "TOO_MANY_REQUESTS",
+	AccessDenied:           "ACCESS_DENIED",
+	EmailAlreadyInUse:      "EMAIL_ALREADY_IN_USE",
+	InternalServerError:    "INTERNAL_SERVER_ERROR",
+	InvalidCode:            "INVALID_CODE",
+	InvalidData:            "INVALID_DATA",
+	InvalidEmail:           "INVALID_EMAIL",
+	InvalidToken:           "INVALID_TOKEN",
+	MissingData:            "MISSING_DATA",
+	MissingSecret:          "MISSING_SECRET",
+	MissingToken:           "MISSING_TOKEN",
+	MissingUserID:          "MISSING_USER_ID",
+	NotFound:               "NOT_FOUND",
+	Ok:                     "OK",
+	OldPasswordIsInvalid:   "OLD_PASSWORD_IS_INVALID",
+	PasswordRecordNotFound: "PASSWORD_RECORD_NOT_FOUND",
+	TooManyRequests:        "TOO_MANY_REQUESTS",
 }
 
-// Available account roles
+// Roles contains available account roles
 var Roles = RolesStruct{
 	Admin: "admin",
 	Root:  "root",
