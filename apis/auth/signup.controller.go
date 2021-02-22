@@ -11,8 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
@@ -34,7 +34,9 @@ func signUp(ctx *fiber.Ctx) error {
 	firstName := body.FirstName
 	lastName := body.LastName
 	password := body.Password
-	if client == "" || email == "" || firstName == "" || lastName == "" || password == "" {
+	signedAgreement := body.SignedAgreement
+	if client == "" || email == "" || firstName == "" ||
+		lastName == "" || password == "" || !signedAgreement {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
 			Info:   configuration.ResponseMessages.MissingData,
@@ -76,14 +78,14 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// load User schema
-	UserCollection := Instance.Database.Collection(Collections.User)
+	UserCollection := DB.Instance.Database.Collection(DB.Collections.User)
 
 	// check if email is already in use
 	existingRecord := UserCollection.FindOne(
 		ctx.Context(),
 		bson.D{{Key: "email", Value: trimmedEmail}},
 	)
-	existingUser := &User{}
+	existingUser := &Schemas.User{}
 	existingRecord.Decode(existingUser)
 	if existingUser.ID != "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -95,12 +97,13 @@ func signUp(ctx *fiber.Ctx) error {
 
 	// create a new User record, insert it and get back the ID
 	now := utilities.MakeTimestamp()
-	NewUser := new(User)
+	NewUser := new(Schemas.User)
 	NewUser.ID = ""
 	NewUser.Email = trimmedEmail
 	NewUser.FirstName = trimmedFirstName
 	NewUser.LastName = trimmedLastName
 	NewUser.Role = configuration.Roles.User
+	NewUser.SignedAgreement = true
 	NewUser.Created = now
 	NewUser.Updated = now
 	insertionResult, insertionError := UserCollection.InsertOne(ctx.Context(), NewUser)
@@ -115,11 +118,11 @@ func signUp(ctx *fiber.Ctx) error {
 		ctx.Context(),
 		bson.D{{Key: "_id", Value: insertionResult.InsertedID}},
 	)
-	createdUser := &User{}
+	createdUser := &Schemas.User{}
 	createdRecord.Decode(createdUser)
 
 	// load Image schema
-	ImageCollection := Instance.Database.Collection(Collections.Image)
+	ImageCollection := DB.Instance.Database.Collection(DB.Collections.Image)
 
 	// create an Image for the User
 	image, imageError := utilities.MakeHash(
@@ -134,7 +137,7 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// create a new Image record and insert it
-	NewImage := new(Image)
+	NewImage := new(Schemas.Image)
 	NewImage.ID = ""
 	NewImage.Image = image
 	NewImage.UserId = createdUser.ID
@@ -150,7 +153,7 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// load Password schema
-	PasswordCollection := Instance.Database.Collection(Collections.Password)
+	PasswordCollection := DB.Instance.Database.Collection(DB.Collections.Password)
 
 	// create password hash
 	hash, hashError := utilities.MakeHash(trimmedPassword)
@@ -163,7 +166,7 @@ func signUp(ctx *fiber.Ctx) error {
 	}
 
 	// create a new Password record and insert it
-	NewPassword := new(Password)
+	NewPassword := new(Schemas.Password)
 	NewPassword.ID = ""
 	NewPassword.Hash = hash
 	NewPassword.RecoveryCode = ""

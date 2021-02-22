@@ -8,8 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"deepseen-backend/configuration"
-	. "deepseen-backend/database"
-	. "deepseen-backend/database/schemas"
+	DB "deepseen-backend/database"
+	Schemas "deepseen-backend/database/schemas"
 	"deepseen-backend/redis"
 	"deepseen-backend/utilities"
 )
@@ -17,15 +17,15 @@ import (
 // Handle complete sign out
 func completeSignOut(ctx *fiber.Ctx) error {
 	// get User ID from Locals (assert it as string as well)
-	userId := ctx.Locals("UserId").(string)
+	userID := ctx.Locals("UserId").(string)
 
 	// load an Image record
-	ImageCollection := Instance.Database.Collection(Collections.Image)
+	ImageCollection := DB.Instance.Database.Collection(DB.Collections.Image)
 	rawImageRecord := ImageCollection.FindOne(
 		ctx.Context(),
-		bson.D{{Key: "userId", Value: userId}},
+		bson.D{{Key: "userId", Value: userID}},
 	)
-	imageRecord := &Image{}
+	imageRecord := &Schemas.Image{}
 	rawImageRecord.Decode(imageRecord)
 	if imageRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
@@ -37,7 +37,7 @@ func completeSignOut(ctx *fiber.Ctx) error {
 
 	// generate a new image
 	image, imageError := utilities.MakeHash(
-		userId + fmt.Sprintf("%v", utilities.MakeTimestamp()),
+		userID + fmt.Sprintf("%v", utilities.MakeTimestamp()),
 	)
 	if imageError != nil {
 		return utilities.Response(utilities.ResponseParams{
@@ -51,7 +51,7 @@ func completeSignOut(ctx *fiber.Ctx) error {
 	now := utilities.MakeTimestamp()
 	_, updateError := ImageCollection.UpdateOne(
 		ctx.Context(),
-		bson.D{{Key: "userId", Value: userId}},
+		bson.D{{Key: "userId", Value: userID}},
 		bson.D{{
 			Key: "$set",
 			Value: bson.D{
@@ -79,7 +79,7 @@ func completeSignOut(ctx *fiber.Ctx) error {
 		context.Background(),
 		utilities.KeyFormatter(
 			configuration.Redis.Prefixes.Room,
-			userId,
+			userID,
 		),
 	).Err()
 	if redisRoomError != nil {
@@ -95,7 +95,7 @@ func completeSignOut(ctx *fiber.Ctx) error {
 		context.Background(),
 		utilities.KeyFormatter(
 			configuration.Redis.Prefixes.User,
-			userId,
+			userID,
 		),
 	).Err()
 	if redisUserError != nil {
