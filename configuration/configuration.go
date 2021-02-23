@@ -29,6 +29,7 @@ var Redis = RedisOptions{
 var ResponseMessages = ResponseMessagesStruct{
 	AccessDenied:           "ACCESS_DENIED",
 	EmailAlreadyInUse:      "EMAIL_ALREADY_IN_USE",
+	ImageRecordNotFound:    "IMAGE_RECORD_NOT_FOUND",
 	InternalServerError:    "INTERNAL_SERVER_ERROR",
 	InvalidCode:            "INVALID_CODE",
 	InvalidData:            "INVALID_DATA",
