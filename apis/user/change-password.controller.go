@@ -123,7 +123,7 @@ func changePassword(ctx *fiber.Ctx) error {
 	if imageRecord.ID == "" {
 		return utilities.Response(utilities.ResponseParams{
 			Ctx:    ctx,
-			Info:   configuration.ResponseMessages.AccessDenied,
+			Info:   configuration.ResponseMessages.ImageRecordNotFound,
 			Status: fiber.StatusUnauthorized,
 		})
 	}

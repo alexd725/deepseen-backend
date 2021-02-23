@@ -34,6 +34,7 @@ type RedisOptions struct {
 type ResponseMessagesStruct struct {
 	AccessDenied           string
 	EmailAlreadyInUse      string
+	ImageRecordNotFound    string
 	InternalServerError    string
 	InvalidCode            string
 	InvalidEmail           string
