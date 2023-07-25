@@ -6,8 +6,6 @@ Stack: [Golang](https://golang.org), [Fiber](https://gofiber.io), [MongoDB](http
 
 DEV: http://localhost:1337
 
-STAGE: https://deepseen-backend.herokuapp.com
-
 ### Deploy
 
 Golang **v1.15.X** is required
